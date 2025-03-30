@@ -1,0 +1,68 @@
+server:
+  port: 80
+  shutdown: graceful
+
+logging:
+  level:
+    org.redisson: DEBUG
+
+spring:
+  application:
+    name: assignment
+  security:
+    user:
+      name: test
+      password: test
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: 'jdbc:h2:tcp://localhost/~/test'
+    username: test
+    password: test
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        show_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: default
+      password: test
+      ssl:
+        enabled: false
+      database: 0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+      base-path: /
+
+springdoc:
+  swagger-ui:
+    groups-order: desc
+    tags-sorter: alpha
+    operations-sorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+    default-models-expand-depth: 2
+    default-model-expand-depth: 2
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  writer-with-default-pretty-printer: true
+  model-and-view-allowed: true
+  paths-to-match:
+    - /api/v1/**
