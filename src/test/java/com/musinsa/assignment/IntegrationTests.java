@@ -46,9 +46,7 @@ class IntegrationTests {
     @Autowired private CategoryService categoryService;
 
     @BeforeEach
-    void setup() {
-//        beforeSetup();
-    }
+    void setup() {}
 
     @Test
     @DisplayName("IntegrationTest: Add the brand")
@@ -167,7 +165,7 @@ class IntegrationTests {
             .andExpect(jsonPath("$.result.totalPrice").value(36100))
             .andExpect(jsonPath("$.result.brand").value("D"))
             .andExpect(jsonPath("$.result.categories[*].category",
-                containsInAnyOrder("상의","아우터","바지","스니커즈","가방","모자","양말", "액세서리")))
+                containsInAnyOrder("상의", "아우터", "바지", "스니커즈", "가방", "모자", "양말", "액세서리")))
             .andExpect(jsonPath("$.result.categories[*].price",
                 containsInAnyOrder(10100, 5100, 3000, 9500, 2500, 1500, 2400, 2000)));
     }

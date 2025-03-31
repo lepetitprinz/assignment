@@ -36,12 +36,7 @@ public class PriceServiceTest {
     private ProductRepository productRepository;
 
     @BeforeEach
-    public void before() {
-        setCategories();
-        setBrands();
-        setProducts();
-        System.out.println("Test before ");
-    }
+    public void setup() {}
 
     @Test
     @DisplayName("Check that result equals expected each min price of products by all of categories")
@@ -50,18 +45,34 @@ public class PriceServiceTest {
 
         // verify individual categories
         PriceByBrandDTO top = response.getMinPriceByCategory().get("상의");
-        assertEquals("A", top.getBrand());
-        assertEquals(1000, top.getPrice());
+        assertEquals("C", top.getBrand());
+        assertEquals(10000, top.getPrice());
 
         PriceByBrandDTO outer = response.getMinPriceByCategory().get("아우터");
-        assertEquals("C", outer.getBrand());
-        assertEquals(2000, outer.getPrice());
+        assertEquals("E", outer.getBrand());
+        assertEquals(5000, outer.getPrice());
 
-        PriceByBrandDTO pants = response.getMinPriceByCategory().get("바지");
-        assertEquals("B", pants.getBrand());
-        assertEquals(300, pants.getPrice());
+        PriceByBrandDTO sneakers = response.getMinPriceByCategory().get("스니커즈");
+        assertEquals("G", sneakers.getBrand());
+        assertEquals(9000, sneakers.getPrice());
 
-        assertEquals(response.getTotalPrice(), 3300);
+        PriceByBrandDTO bag = response.getMinPriceByCategory().get("가방");
+        assertEquals("A", bag.getBrand());
+        assertEquals(2000, bag.getPrice());
+
+        PriceByBrandDTO hat = response.getMinPriceByCategory().get("모자");
+        assertEquals("D", hat.getBrand());
+        assertEquals(1500, hat.getPrice());
+
+        PriceByBrandDTO socks = response.getMinPriceByCategory().get("양말");
+        assertEquals("I", socks.getBrand());
+        assertEquals(1700, socks.getPrice());
+
+        PriceByBrandDTO acc = response.getMinPriceByCategory().get("액세서리");
+        assertEquals("F", acc.getBrand());
+        assertEquals(1900, acc.getPrice());
+
+        assertEquals(response.getTotalPrice(), 43100);
     }
 
     @Test
@@ -69,16 +80,26 @@ public class PriceServiceTest {
     public void checkGetMinPriceBrandByAllCategories() {
         PriceByBrandMinResponse response = priceService.getMinPriceBrandByAllCategories();
         PriceByBrandMin result = response.getResult();
-        assertEquals(result.getBrand(), "B");
-        assertEquals(result.getTotalPrice(), 3700);
+        assertEquals(result.getBrand(), "D");
+        assertEquals(result.getTotalPrice(), 36100);
 
         for (PriceByCategoryDTO categoryDTO: result.getCategories()) {
             if (Objects.equals(categoryDTO.getCategory(), "상의")) {
-                assertEquals(categoryDTO.getPrice(), 1100);
+                assertEquals(categoryDTO.getPrice(), 10100);
             } else if (Objects.equals(categoryDTO.getCategory(), "아우터")) {
-                assertEquals(categoryDTO.getPrice(), 2300);
+                assertEquals(categoryDTO.getPrice(), 5100);
             } else if (Objects.equals(categoryDTO.getCategory(), "바지")) {
-                assertEquals(categoryDTO.getPrice(), 300);
+                assertEquals(categoryDTO.getPrice(), 3000);
+            } else if (Objects.equals(categoryDTO.getCategory(), "스니커즈")) {
+                assertEquals(categoryDTO.getPrice(), 9500);
+            } else if (Objects.equals(categoryDTO.getCategory(), "가방")) {
+                assertEquals(categoryDTO.getPrice(), 2500);
+            } else if (Objects.equals(categoryDTO.getCategory(), "모자")) {
+                assertEquals(categoryDTO.getPrice(), 1500);
+            } else if (Objects.equals(categoryDTO.getCategory(), "양말")) {
+                assertEquals(categoryDTO.getPrice(), 2400);
+            } else if (Objects.equals(categoryDTO.getCategory(), "액세서리")) {
+                assertEquals(categoryDTO.getPrice(), 2000);
             }
         }
     }
@@ -92,44 +113,9 @@ public class PriceServiceTest {
         List<PriceByBrandDTO> maxPrices = response.getMaxPrice();
 
         assertEquals(response.getCategory(), categoryName);
-        assertEquals(minPrices.get(0).getBrand(), "A");
-        assertEquals(minPrices.get(0).getPrice(), 1000);
-        assertEquals(maxPrices.get(0).getBrand(), "C");
-        assertEquals(maxPrices.get(0).getPrice(), 1200);
-    }
-
-    private void setCategories() {
-        // set categories
-        categoryRepository.save(new Category("상의"));
-        categoryRepository.save(new Category("아우터"));
-        categoryRepository.save(new Category("바지"));
-    }
-
-    private void setBrands() {
-        // set brands
-        brandRepository.save(new Brand("A"));
-        brandRepository.save(new Brand("B"));
-        brandRepository.save(new Brand("C"));
-    }
-
-    private void setProducts() {
-        Category top = categoryRepository.findByName("상의").orElseThrow();
-        Category outer = categoryRepository.findByName("아우터").orElseThrow();
-        Category pants = categoryRepository.findByName("바지").orElseThrow();
-
-        Brand brandA = brandRepository.findByName("A").orElseThrow();
-        Brand brandB = brandRepository.findByName("B").orElseThrow();
-        Brand brandC = brandRepository.findByName("C").orElseThrow();
-
-        // set products
-        productRepository.save(new Product("prd1", top, brandA, 1000));
-        productRepository.save(new Product("prd2", top, brandB, 1100));
-        productRepository.save(new Product("prd3", top, brandC, 1200));
-        productRepository.save(new Product("prd4", outer, brandA, 2500));
-        productRepository.save(new Product("prd5", outer, brandB, 2300));
-        productRepository.save(new Product("prd6", outer, brandC, 2000));
-        productRepository.save(new Product("prd7", pants, brandA, 500));
-        productRepository.save(new Product("prd8", pants, brandB, 300));
-        productRepository.save(new Product("prd9", pants, brandC, 850));
+        assertEquals(minPrices.get(0).getBrand(), "C");
+        assertEquals(minPrices.get(0).getPrice(), 10000);
+        assertEquals(maxPrices.get(0).getBrand(), "I");
+        assertEquals(maxPrices.get(0).getPrice(), 11400);
     }
 }
