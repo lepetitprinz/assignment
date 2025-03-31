@@ -1,11 +1,13 @@
 plugins {
     id 'java'
+    id 'application'
     id 'org.springframework.boot' version '3.4.4'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
+
 springBoot {
-    mainClass.set("org.musinsa.assignment.AssignmentApplication")
+    mainClass.set("com.musinsa.assignment.AssignmentApplication")
     buildInfo {
         properties {
             additional.put("java.version", JavaLanguageVersion.of(17))
@@ -14,7 +16,7 @@ springBoot {
 }
 
 group = 'com.musinsa'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 
 java {
     toolchain {
