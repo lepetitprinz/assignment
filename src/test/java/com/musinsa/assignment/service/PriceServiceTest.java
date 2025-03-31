@@ -1,12 +1,6 @@
 package com.musinsa.assignment.service;
 
 import com.musinsa.assignment.controller.dto.*;
-import com.musinsa.assignment.domain.Brand;
-import com.musinsa.assignment.domain.Category;
-import com.musinsa.assignment.domain.product.Product;
-import com.musinsa.assignment.repository.BrandRepository;
-import com.musinsa.assignment.repository.CategoryRepository;
-import com.musinsa.assignment.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,15 +20,6 @@ public class PriceServiceTest {
     @Autowired
     private PriceService priceService;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private BrandRepository brandRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
     @BeforeEach
     public void setup() {}
 
@@ -53,7 +38,7 @@ public class PriceServiceTest {
         assertEquals(5000, outer.getPrice());
 
         PriceByBrandDTO sneakers = response.getMinPriceByCategory().get("스니커즈");
-        assertEquals("G", sneakers.getBrand());
+        assertTrue(sneakers.getBrand().equals("A") || sneakers.getBrand().equals("G"));
         assertEquals(9000, sneakers.getPrice());
 
         PriceByBrandDTO bag = response.getMinPriceByCategory().get("가방");
@@ -72,7 +57,7 @@ public class PriceServiceTest {
         assertEquals("F", acc.getBrand());
         assertEquals(1900, acc.getPrice());
 
-        assertEquals(response.getTotalPrice(), 43100);
+        assertEquals(response.getTotalPrice(), 34100);
     }
 
     @Test

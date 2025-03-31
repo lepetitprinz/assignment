@@ -12,12 +12,14 @@ import com.musinsa.assignment.repository.BrandRepository;
 import com.musinsa.assignment.repository.CategoryRepository;
 import com.musinsa.assignment.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -25,6 +27,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
+
+    private final CacheService cacheService;
 
     @Transactional
     public Product findById(UUID id) {
@@ -61,6 +65,9 @@ public class ProductService {
             .brand(brandId)
             .price(request.getPrice())
             .build();
+
+        // update cache
+        cacheService.updatePrice(newProduct);
 
         return productRepository.save(newProduct);
     }
@@ -106,6 +113,9 @@ public class ProductService {
             product.setPrice(request.getPrice());
         }
 
-        return productRepository.save(product);
+        // update cache
+        cacheService.updatePrice(product);
+
+        return product;
     }
 }
