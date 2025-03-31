@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -25,22 +25,32 @@ public class RedisService {
     }
 
     @Async("threadPoolTaskExecutor")
-    public void set(String key, String value) {
-        redisTemplate.opsForValue().set(key, value);
+    public void delete(String key) {
+        CompletableFuture.completedFuture(redisTemplate.delete(key));
     }
 
     @Async("threadPoolTaskExecutor")
-    public void unlink(String key) {
-        redisTemplate.unlink(key);
+    public CompletableFuture<Map<Object, Object>> getAllHashEntries(String key) {
+        return CompletableFuture.completedFuture(redisTemplate.opsForHash().entries(key));
     }
 
     @Async("threadPoolTaskExecutor")
-    public void addToSet(String key, String value) {
-        redisTemplate.opsForSet().add(key, value);
+    public void addHashMap(String key, String field, String value) {
+        redisTemplate.opsForHash().put(key, field, value);
     }
 
     @Async("threadPoolTaskExecutor")
-    public CompletableFuture<Set<String>> getSet(String key) {
-        return CompletableFuture.completedFuture(redisTemplate.opsForSet().members(key));
+    public CompletableFuture<Boolean> hashFieldHashMap(String key, String field) {
+        return CompletableFuture.completedFuture(redisTemplate.opsForHash().hasKey(key, field));
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public void deleteHashMap(String key, String field) {
+        redisTemplate.opsForHash().delete(key, field);
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public CompletableFuture<Object> getHashMap(String key, String field) {
+        return CompletableFuture.completedFuture(redisTemplate.opsForHash().get(key, field));
     }
 }

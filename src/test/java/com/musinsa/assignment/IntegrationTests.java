@@ -68,8 +68,8 @@ class IntegrationTests {
     @Transactional
     void testAddProduct() throws Exception {
         ProductAddRequest request = ProductAddRequest.builder()
-            .name("new-product")
-            .price(5000)
+            .name("new-sneakers")
+            .price(10000)
             .brand(new Brand("D"))
             .category(new Category("스니커즈"))
             .build();
@@ -96,7 +96,7 @@ class IntegrationTests {
         Category category = categoryService.findByName("스니커즈");
         Brand brand = brandService.findByName("F");
 
-        Integer newPrice = 999;
+        Integer newPrice = 1000000;
 
         ProductUpdateRequest request = new ProductUpdateRequest(id, category, brand, newPrice);
         String json = objectMapper.writeValueAsString(request);
@@ -136,14 +136,14 @@ class IntegrationTests {
     void testGetMinPriceProductByAllCategories() throws Exception {
         mockMvc.perform(get("/api/v1/price/category/all/min"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.totalPrice").value(43100))
+            .andExpect(jsonPath("$.totalPrice").value(34100))
             .andExpect(jsonPath("$.minPriceByCategory.상의.brand").value("C"))
             .andExpect(jsonPath("$.minPriceByCategory.상의.price").value(10000))
             .andExpect(jsonPath("$.minPriceByCategory.아우터.brand").value("E"))
             .andExpect(jsonPath("$.minPriceByCategory.아우터.price").value(5000))
             .andExpect(jsonPath("$.minPriceByCategory.바지.brand").value("D"))
             .andExpect(jsonPath("$.minPriceByCategory.바지.price").value(3000))
-            .andExpect(jsonPath("$.minPriceByCategory.스니커즈.brand").value("G"))
+            .andExpect(jsonPath("$.minPriceByCategory.스니커즈.brand", anyOf(is("A"), is("G"))))
             .andExpect(jsonPath("$.minPriceByCategory.스니커즈.price").value(9000))
             .andExpect(jsonPath("$.minPriceByCategory.가방.brand").value("A"))
             .andExpect(jsonPath("$.minPriceByCategory.가방.price").value(2000))

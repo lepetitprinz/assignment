@@ -6,8 +6,6 @@ import com.musinsa.assignment.domain.Brand;
 import com.musinsa.assignment.domain.Category;
 import com.musinsa.assignment.domain.product.Product;
 import com.musinsa.assignment.exception.ProductException;
-import com.musinsa.assignment.repository.BrandRepository;
-import com.musinsa.assignment.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +23,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class ProductServiceTest {
 
     private final String productName = "test-";
+    private final String newCategoryName = "스니커즈";
+    private final String newBrandName = "D";
 
     @Autowired
     private ProductService productService;
@@ -34,12 +34,6 @@ public class ProductServiceTest {
 
     @Autowired
     private CategoryService categoryService;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private BrandRepository brandRepository;
 
     @BeforeEach
     public void before() {
@@ -65,21 +59,14 @@ public class ProductServiceTest {
         // create a new product
         Product createdProduct = productService.add(createTestAddProductRequest());
         UUID id = createdProduct.getId();
-
-        // create a new category of target category to update
-        String newCategoryName = "new-category";
-        categoryRepository.save(new Category(newCategoryName));
+        
         UUID newCategoryId = categoryService.findByName(newCategoryName).getId();
-
-        // create a new brand of target brand to update
-        String newBrandName = "new-brand";
-        brandRepository.save(new Brand(newBrandName));
         Brand newBrand = brandService.findByName(newBrandName);
         UUID newBrandId = newBrand.getId();
 
         Category category = Category.builder().name(newCategoryName).build();
         Brand brand = Brand.builder().name(newBrandName).build();
-        Integer price = 999;
+        Integer price = 100000;
 
         ProductUpdateRequest request = new ProductUpdateRequest(id, category);
         Product updatedProduct = productService.update(request);
@@ -90,6 +77,8 @@ public class ProductServiceTest {
         assertEquals(newCategoryId, updatedProduct7.getCategory().getId());
         assertEquals(newBrandId, updatedProduct7.getBrand().getId());
         assertEquals(price, updatedProduct7.getPrice());
+
+        productService.deleteById(id);
     }
 
     @Test
@@ -99,9 +88,6 @@ public class ProductServiceTest {
         Product createdProduct = productService.add(createTestAddProductRequest());
         UUID id = createdProduct.getId();
 
-        // create a new brand of target brand to update
-        String newBrandName = "new-brand";
-        brandRepository.save(new Brand(newBrandName));
         Brand newBrand = brandService.findByName(newBrandName);
         UUID newBrandId = newBrand.getId();
 
@@ -119,7 +105,7 @@ public class ProductServiceTest {
         Product createdProduct = productService.add(createTestAddProductRequest());
         UUID id = createdProduct.getId();
 
-        Integer newPrice = 9999;
+        Integer newPrice = 100000;
 
         ProductUpdateRequest request = new ProductUpdateRequest(id, newPrice);
         Product updatedProduct = productService.update(request);
@@ -133,14 +119,7 @@ public class ProductServiceTest {
         Product createdProduct = productService.add(createTestAddProductRequest());
         UUID id = createdProduct.getId();
 
-        // create a new category of target category to update
-        String newCategoryName = "new-category";
-        categoryRepository.save(new Category(newCategoryName));
         UUID newCategoryId = categoryService.findByName(newCategoryName).getId();
-
-        // create a new brand of target brand to update
-        String newBrandName = "new-brand";
-        brandRepository.save(new Brand(newBrandName));
         Brand newBrand = brandService.findByName(newBrandName);
         UUID newBrandId = newBrand.getId();
 
@@ -159,13 +138,10 @@ public class ProductServiceTest {
         Product createdProduct = productService.add(createTestAddProductRequest());
         UUID id = createdProduct.getId();
 
-        // create a new category of target category to update
-        String newCategoryName = "new-category";
-        categoryRepository.save(new Category(newCategoryName));
         UUID newCategoryId = categoryService.findByName(newCategoryName).getId();
 
         Category category = Category.builder().name(newCategoryName).build();
-        Integer price = 999;
+        Integer price = 100000;
 
         ProductUpdateRequest request5 = new ProductUpdateRequest(id, category, price);
         Product updatedProduct5 = productService.update(request5);
@@ -179,15 +155,12 @@ public class ProductServiceTest {
         // create a new product
         Product createdProduct = productService.add(createTestAddProductRequest());
         UUID id = createdProduct.getId();
-
-        // create a new brand of target brand to update
-        String newBrandName = "new-brand";
-        brandRepository.save(new Brand(newBrandName));
+        
         Brand newBrand = brandService.findByName(newBrandName);
         UUID newBrandId = newBrand.getId();
 
         Brand brand = Brand.builder().name(newBrandName).build();
-        Integer price = 999;
+        Integer price = 100000;
 
         ProductUpdateRequest request = new ProductUpdateRequest(id, brand, price);
         Product updatedProduct = productService.update(request);
@@ -201,21 +174,15 @@ public class ProductServiceTest {
         // create a new product
         Product createdProduct = productService.add(createTestAddProductRequest());
         UUID id = createdProduct.getId();
-
-        // create a new category of target category to update
-        String newCategoryName = "new-category";
-        categoryRepository.save(new Category(newCategoryName));
+        
         UUID newCategoryId = categoryService.findByName(newCategoryName).getId();
-
-        // create a new brand of target brand to update
-        String newBrandName = "new-brand";
-        brandRepository.save(new Brand(newBrandName));
+        
         Brand newBrand = brandService.findByName(newBrandName);
         UUID newBrandId = newBrand.getId();
 
         Category category = Category.builder().name(newCategoryName).build();
         Brand brand = Brand.builder().name(newBrandName).build();
-        Integer price = 999;
+        Integer price = 100000;
 
         ProductUpdateRequest request = new ProductUpdateRequest(id, category, brand, price);
         Product updatedProduct = productService.update(request);
@@ -247,7 +214,7 @@ public class ProductServiceTest {
             .name(productName + UUID.randomUUID())
             .category(category)
             .brand(brand)
-            .price(10000)
+            .price(100000)
             .build();
     }
 }
